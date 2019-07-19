@@ -1,0 +1,167 @@
+<!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>URL encode - decode utility</title>
+        <style>            
+            header{    
+                margin: 0 auto;
+                width: fit-content;
+            }
+            #box-container{
+                display: flex;
+                flex-direction: column;
+                width: 80%;
+                margin: 0 10% 0 10%;
+            }
+            textarea{
+                width: 99%;
+                height: 20vh;
+                border-radius: 5px;
+                box-shadow: 1px 1px 2px 0 rgba(0,0,0,.15);
+            }
+            #message-box{
+                width: 90%;
+                background-color: #B9F6CA;
+                border-radius: 5px;
+                margin: 10px 0;
+                padding: 10px 5%;
+                border: 1px solid #00C853;
+            }
+            #clear-container{
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+            #clear{
+                margin: 0;
+                padding: 0;
+                text-decoration: none;
+                color: #fff;
+                background-color: #26a69a;
+                text-align: center;
+                letter-spacing: .5px;
+                -webkit-transition: background-color .2s ease-out;
+                transition: background-color .2s ease-out;
+                cursor: pointer;
+                -webkit-transition: .3s ease-out;
+                transition: .3s ease-out;
+                position: relative;
+                cursor: pointer;
+                display: inline-block;
+                overflow: hidden;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                vertical-align: middle;
+                font-size: 14px;
+                outline: 0;
+                border: none;
+                border-radius: 5px;
+                display: inline-block;
+                height: 36px;
+                line-height: 36px;
+                padding: 0 16px;
+                text-transform: uppercase;
+                vertical-align: middle;
+                -webkit-tap-highlight-color: transparent;
+                webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+                box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+            }
+            #clear:hover{
+                background-color: #2bbbad;
+                -webkit-box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);
+                box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);
+            }
+            footer{
+                position: fixed;
+                display: flex;
+                bottom: 0;
+                background-color: beige;
+                width: 100%;
+                height: 5vh;
+                justify-content: flex-end;
+                align-items: center;
+            }
+            #site-created-by{
+                width: fit-content;
+                padding-right: 25px;
+            }
+        </style>       
+    </head>                
+    <body>
+        <header>
+            <h1>Endoce Decode url tool</h>
+        </header>
+        <main id="box-container">
+            <div id="instructions" class="box">
+                <h2>Get URL encoded / decoded fast and easy</h2>
+                <p>Paste in the box below the url encoded or decode.</p>
+                <p>The tool is smart enought to detect if the url is encoded or decoded to perform the inverse operation</p>
+            </div>
+            <div id="action" class="box">
+                <textarea id="url-text-area"></textarea> 
+            </div>
+            <div id="message-box" class="box">
+                <p id="encoded-decoded-message"></p>
+                <p id="encoded-times"></p>
+            </div>
+            <div id="result" class="box">
+                <textarea id="text-area-result"></textarea> 
+            </div>
+            <div class="box" id="clear-container">
+                <button id="clear">Clear</button>
+            </div>
+        </main>
+        <footer>
+            <div id="site-created-by">
+                Site created by:<b>James Bond</b>
+            </div>
+        </footer>
+        <script type="text/javascript">
+            var userInputTextArea = document.getElementById('url-text-area');
+            var clearButton = document.getElementById('clear-container');
+            var textAreas = document.getElementsByTagName('textarea');
+
+            clearButton.onclick = function(){
+                for(index in textAreas)
+                    textAreas[index].value = '';
+            }
+
+            userInputTextArea.onpaste = function encodeDecode(event){
+                debugger;
+                var result = '';
+                var encodedTimes = 0;           
+                var maxLoops = 20;     
+                var reg = /%[0-9a-f]{2}/i;
+                let userInputValue = event.clipboardData.getData('Text');
+
+                if(reg.exec(userInputValue)){
+                    //Url is encoded
+                    //Decoding loop
+                    var partialResult = userInputValue;
+                    do{
+                        partialResult = decodeURIComponent(partialResult);
+                        encodedTimes ++;
+                    }while(reg.exec(partialResult) && encodedTimes <= 20);                     
+                    result = partialResult;
+                    document.getElementById('message-box').textContent = "Decoded!";
+
+                    console.log('encodedTimes: ' + encodedTimes);
+                }else{
+                    //Url is not encoded --> encoding
+                    result = encodeURIComponent(userInputValue);
+                    document.getElementById('message-box').textContent = "Encoded!";
+                }
+
+                //print results
+                document.getElementById('text-area-result').value = result;   
+            }
+
+          
+        </script>
+    </body>
+</html>
